@@ -1,5 +1,10 @@
 # design-md — a DESIGN.md toolkit skill (no CLI required)
 
+![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)
+![Python: stdlib only](https://img.shields.io/badge/Python-stdlib_only-3776AB.svg)
+![No CLI required](https://img.shields.io/badge/CLI-not_required-success.svg)
+![DESIGN.md spec](https://img.shields.io/badge/DESIGN.md-alpha-black.svg)
+
 Create, validate, update, preview, and export **DESIGN.md** files — entirely
 through a self-contained skill. **No `npm install`, no Node, no network.**
 
@@ -11,6 +16,12 @@ through a self-contained skill. **No `npm install`, no Node, no network.**
 This is a [skill](https://docs.claude.com) for Claude (Cowork / Claude Code).
 Point Claude at a request like *"make a DESIGN.md for my app"* or *"is my design
 tokens file valid?"* and it uses the bundled scripts to do the work.
+
+![Live preview of a DESIGN.md rendered by the skill](assets/preview.png)
+
+> *The self-contained HTML live preview (`python scripts/preview.py DESIGN.md`)
+> renders the palette, type scale, components, and shape scales straight from the
+> tokens — no build step, no remote assets.*
 
 ---
 
@@ -167,7 +178,7 @@ that version; if upstream changes, `scripts/dmd.py` and `references/` are the
 single source of truth to update. Fidelity is verified against the official CLI
 release used at build time.
 
-## Attribution & license
+## Attribution
 
 - The DESIGN.md **format/spec** and the three files under `assets/examples/` are
   from [google-labs-code/design.md](https://github.com/google-labs-code/design.md),
@@ -176,6 +187,16 @@ release used at build time.
   [VoltAgent/awesome-design-md](https://github.com/VoltAgent/awesome-design-md)
   (MIT) and [getdesign.md](https://getdesign.md); it links to them and does not
   redistribute their contents.
-- This skill's code is released under **Apache-2.0** (see [`LICENSE`](LICENSE)).
 
 This project is independent and not affiliated with or endorsed by Google.
+
+## License
+
+Licensed under the **Apache License 2.0** — see [`LICENSE`](LICENSE) and
+[`NOTICE`](NOTICE). You're free to use, modify, and distribute this skill,
+including commercially, provided you retain the license and attribution notices.
+
+```
+Copyright 2026 Jeftar Mascarenhas
+Licensed under the Apache License, Version 2.0.
+```
