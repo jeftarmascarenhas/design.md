@@ -13,9 +13,13 @@ through a self-contained skill. **No `npm install`, no Node, no network.**
 > persistent understanding of a design system: machine-readable **design tokens**
 > in YAML front matter + human-readable **rationale** in Markdown prose.
 
-This is a [skill](https://docs.claude.com) for Claude (Cowork / Claude Code).
-Point Claude at a request like *"make a DESIGN.md for my app"* or *"is my design
-tokens file valid?"* and it uses the bundled scripts to do the work.
+This is an agent **skill** — a `SKILL.md` plus bundled scripts — usable by *any*
+agentic coding tool that supports skills (Claude / Cowork / Claude Code, Cursor,
+GitHub Copilot, and others). Point your agent at a request like *"make a
+DESIGN.md for my app"* or *"is my design tokens file valid?"* and it runs the
+bundled scripts to do the work. Because the scripts are plain Python with no
+dependencies, they also work **standalone** — straight from your terminal or in
+CI, with no agent at all.
 
 ![Live preview of a DESIGN.md rendered by the skill](assets/preview.png)
 
@@ -52,14 +56,16 @@ CLI (`diff <(npx -y @google/design.md lint DESIGN.md) <(python scripts/dmd.py li
 
 ## Install
 
-**As a packaged skill:** install `design-md.skill` from your Claude app's skills
-UI (or run the bundled packager to produce it).
+**As a folder:** drop this directory wherever your agent discovers skills so
+`SKILL.md` is picked up. Skills are a portable convention — the same folder works
+across tools that read `SKILL.md` (Claude / Cowork / Claude Code, Cursor, Copilot,
+and others).
 
-**As a folder (Claude Code / Cowork plugins):** drop this directory into your
-skills location so `SKILL.md` is discoverable.
+**As a packaged skill:** some tools accept a zipped `.skill` bundle; install it
+through that tool's skills UI (or run the bundled packager to produce one).
 
-**Standalone scripts:** you can also just run the scripts directly — they have no
-dependencies:
+**Standalone scripts:** you can also just run the scripts directly — no agent and
+no dependencies required:
 
 ```bash
 python scripts/dmd.py selftest          # 28 offline checks, no Node/network
