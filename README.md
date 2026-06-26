@@ -56,57 +56,76 @@ CLI (`diff <(npx -y @google/design.md lint DESIGN.md) <(python scripts/dmd.py li
 
 ## Install
 
-**As a folder:** drop this directory wherever your agent discovers skills so
-`SKILL.md` is picked up. Skills are a portable convention — the same folder works
-across tools that read `SKILL.md` (Claude / Cowork / Claude Code, Cursor, Copilot,
-and others).
+Installing a skill is just copying a folder. Download (or clone) this repo and
+drop the `design-md` folder into your tool's skills directory, so you end up
+with:
 
-**As a packaged skill:** some tools accept a zipped `.skill` bundle; install it
-through that tool's skills UI (or run the bundled packager to produce one).
-
-**Standalone scripts:** you can also just run the scripts directly — no agent and
-no dependencies required:
-
+```
+<your skills folder>/
+└── design-md/
+    ├── SKILL.md
+    ├── scripts/
+    ├── references/
+    └── assets/
+```
+e.g:. `.claude/skills/design-md/**`, `.cursor/skills/design-md/**`, `.github/skills/design-md/**` and other agent.
 ```bash
-python scripts/dmd.py selftest          # 28 offline checks, no Node/network
+git clone https://github.com/jeftarmascarenhas/design.md.git
+# then copy the folder into your skills directory, e.g.:
+cp -r design.md ~/.your-agent/skills/design-md
 ```
 
-Requires Python 3.8+.
+That's it — reload your agent and it will discover the skill via `SKILL.md`. The
+skills folder location depends on your tool (Claude / Cowork / Claude Code,
+Cursor, Copilot, and others all read `SKILL.md`), but the convention is the same
+everywhere: one folder per skill. No build step and no dependencies — the scripts
+use only the Python standard library (Python 3.8+).
+
+> Optional sanity check: `python scripts/dmd.py selftest` runs 28 offline checks.
 
 ---
 
-## What it does
+## How to use it — just ask your agent
 
-| Goal | Command |
-| ---- | ------- |
-| **Validate / lint** a DESIGN.md | `python scripts/dmd.py lint DESIGN.md` |
-| **Diff** two versions (with regression check) | `python scripts/dmd.py diff OLD.md NEW.md` |
-| **Export** tokens | `python scripts/dmd.py export --format css-tailwind DESIGN.md` |
-| **Print the spec / rules** | `python scripts/dmd.py spec --rules` |
-| **Create** from a token spec | `python scripts/scaffold.py new --from-json spec.json --out DESIGN.md` |
-| **Scan a project** into a draft spec | `python scripts/scaffold.py scan ./my-app --json` |
-| **Update** an existing file | `python scripts/scaffold.py update DESIGN.md --from-json changes.json` |
-| **Live preview** (self-contained HTML) | `python scripts/preview.py DESIGN.md -o preview.html` |
-| **Browse the catalog** | `python scripts/catalog.py search fintech` |
+Once the skill is installed, you don't run anything by hand. Describe what you
+want in your agent's chat in plain language; the skill triggers automatically and
+the agent calls the right script for you. For example:
 
-Export formats: `json-tailwind` (Tailwind v3 `theme.extend`), `css-tailwind`
-(Tailwind v4 `@theme`), `dtcg` (W3C Design Tokens). Validation reproduces the
-nine upstream lint rules — broken references, WCAG AA contrast on component
+- *"Create a DESIGN.md for my meditation app — soft sage greens, off-white
+  background, rounded corners, friendly sans-serif, with a primary button."*
+- *"Build a DESIGN.md from this project."* (the agent scans your codebase for
+  colors, fonts, and radii and drafts one)
+- *"Is my DESIGN.md valid? Something feels off with the button."* (it lints and
+  pinpoints the broken token reference + a fix)
+- *"What changed between these two versions of my design system?"* (a token-level
+  diff with a regression check)
+- *"Export my tokens to a Tailwind v4 theme."* (or `json-tailwind` / W3C `dtcg`)
+- *"Show me a visual preview of this design system."* (a self-contained HTML page)
+- *"Start my design system from Stripe's."* (browses the 74-system catalog)
+
+You never memorize flags — the agent reads `SKILL.md` and picks the right tool.
+
+### What's covered
+
+Creating a DESIGN.md from a brief or by scanning a project, validating it
+(the nine upstream lint rules — broken references, WCAG AA contrast on component
 color pairs, missing primary/typography, orphaned tokens, section order, unknown
-keys — with identical messages and severities. The linter exits non-zero on
-errors so it drops into CI cleanly.
+keys — with identical messages and severities), diffing two versions with a
+regression flag, exporting to `json-tailwind` (Tailwind v3), `css-tailwind`
+(Tailwind v4), or `dtcg` (W3C Design Tokens), rendering a self-contained HTML
+live preview, and browsing a catalog of reference design systems.
 
-### Examples
+### Optional: run the scripts yourself (standalone / CI)
+
+You don't need this for normal use — it's here because the scripts are plain,
+dependency-free Python and double as a tiny CLI. Handy for CI gates (the linter
+exits non-zero on errors) or quick local checks:
 
 ```bash
-# Lint and see JSON findings + summary
-python scripts/dmd.py lint assets/examples/paws-and-paths.md
-
-# Convert tokens to a Tailwind v4 theme
+python scripts/dmd.py lint DESIGN.md                       # validate (JSON findings)
+python scripts/dmd.py diff OLD.md NEW.md                   # token diff + regression
 python scripts/dmd.py export --format css-tailwind DESIGN.md > theme.css
-
-# Render a browsable preview of the palette, type scale, and components
-python scripts/preview.py DESIGN.md
+python scripts/preview.py DESIGN.md                        # self-contained HTML preview
 ```
 
 ---
